@@ -109,7 +109,7 @@ def dsp(features):
         #     'output_config': information useful for correctly configuring the learn block in Studio
         # }
 
-    print(f'Processed features are: ')
+    #print(f'Processed features are: ')
     #print('Feature name, value')
     idx = 0
     for axis in axes:
@@ -117,15 +117,14 @@ def dsp(features):
         for label in output['labels']:
             #print(f'{label: <40}: {output["features"][idx]}')
             processed_features.append(output["features"][idx])
+            idx += 1
     
 
-    print(processed_features)
-    print(type(processed_features))
-    
+    #print(processed_features)   
     processed_features_np = np.array(processed_features)
-    print(type(processed_features_np))
+    processed_features_np_32 = np.float32(processed_features_np)
 
-    return processed_features
+    return processed_features_np_32
 
 
 def akida_model_inference(model, processed_features):

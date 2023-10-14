@@ -376,6 +376,7 @@ def generate_features(implementation_version, draw_graphs, raw_data, axes, sampl
                         lf_labels = l
 
     features += lf_features
+    #added for brainchip accel data
     features = [abs(x) for x in features]
     labels += lf_labels
 
