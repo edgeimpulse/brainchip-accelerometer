@@ -68,10 +68,10 @@ if __name__ == '__main__':
 
         #write to a file
         i = 0
-        while os.path.exists(r'/home/ubuntu/tape_one_side_202310130706_a/tape_one_side.%s.csv' % i):
+        while os.path.exists(r'tape_one_side_202310130706_a/tape_one_side.%s.csv' % i):
             i = i + 1
 
-        with open(r'/home/ubuntu//tape_one_side_202310130706_a/tape_one_side.%s.csv' % i, "w") as f:
+        with open(r'tape_one_side_202310130706_a/tape_one_side.%s.csv' % i, "w") as f:
             df = pd.DataFrame(data)
             df.to_csv(f, index=False, header=True)
             f.write("\n")
