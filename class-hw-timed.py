@@ -225,7 +225,14 @@ def main(argv):
     predictions = akida_model_inference(akida_model, processed_features)
 
     print(predictions)
-    print("softmaxed:", scipy.special.softmax(predictions))
+    np.set_printoptions(suppress=True, precision=6)
+    softmaxed_pred = scipy.special.softmax(predictions)
+    print(softmaxed_pred.shape)
+    print("full: ", softmaxed_pred[0][0][0][0])
+    print("nominal: ", softmaxed_pred[0][0][0][1])
+    print("one side: ", softmaxed_pred[0][0][0][2])
+    print("wire: ", softmaxed_pred[0][0][0][3])
+
 
 if __name__ == '__main__':
 
