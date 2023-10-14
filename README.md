@@ -13,6 +13,6 @@ python3 accel-hw-timed-fixed-dt.py
 
 # class-hw-timed.py
 ```
-python3 class-hw-timed.py <model.eim>
+python3 class-hw-timed.py <path-to-akida.fbz>
 
 ```
