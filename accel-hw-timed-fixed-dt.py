@@ -1,3 +1,10 @@
+'''
+acquires a fix number of accelerometer samples and stores them to csv files on disk
+need to have the adxl34x acceleromter connected
+need to have the pwm connecto the the gpio as described in code
+'''
+
+
 import time
 import board
 import busio
@@ -7,12 +14,12 @@ import pandas as pd
 import sys
 import RPi.GPIO as GPIO
 import threading
+import argparse
 
 num_of_samples = 0
 data = []
 previous_time = 0
 accumulated_time = 0
-number_of_files = 0
 
 adafruit_adxl34x.DataRate.RATE_3200_HZ
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -50,15 +57,26 @@ def data_acq_callback(channel):
     if num_of_samples == 100:
         done_collecting.set()
         num_of_samples = 0
-        
 
-if __name__ == '__main__':
-    done_collecting = threading.Event()
-    done_collecting.clear()
+def help():
+    print('python3 accel-hw-timed-fixed-dt.py <folder-name>')
 
-    GPIO.add_event_detect(16, GPIO.RISING, 
-        callback=data_acq_callback, bouncetime=10)
-        
+def main(argv):
+    global data
+
+    parser = argparse.ArgumentParser(description='acquire accel data to csv file')
+    parser.add_argument('output_dir', type=str,
+                        help='The dir to output the accel data to')
+
+    args = parser.parse_args()
+
+    #create a folder if it doesn't exist
+    #if the folder exists error out
+    os.makedirs(args.output_dir)
+    os.chdir(args.output_dir)
+
+    number_of_files = 0
+
     while number_of_files != 300:   
         p.start(50)
         #wait for data collection to finish
@@ -68,17 +86,27 @@ if __name__ == '__main__':
 
         #write to a file
         i = 0
-        while os.path.exists(r'tape_one_side_202310130706_a/tape_one_side.%s.csv' % i):
+        while os.path.exists(args.output_dir + "-" + str(i) + ".csv"):
             i = i + 1
 
-        with open(r'tape_one_side_202310130706_a/tape_one_side.%s.csv' % i, "w") as f:
+        with open(args.output_dir + "-" + str(i) + ".csv", "w") as f:
             df = pd.DataFrame(data)
             df.to_csv(f, index=False, header=True)
             f.write("\n")
-
+ 
         data = []       
         number_of_files = number_of_files + 1
 
     p.stop()
+
+if __name__ == '__main__':
+    done_collecting = threading.Event()
+    done_collecting.clear()
+
+    GPIO.add_event_detect(16, GPIO.RISING, 
+        callback=data_acq_callback, bouncetime=10)
+
+    #send args to main function
+    main(sys.argv[1:])
     GPIO.cleanup()
-    sys.exit(0)
+    sys.exit(0)    
