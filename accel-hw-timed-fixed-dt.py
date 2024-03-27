@@ -4,7 +4,6 @@ need to have the adxl34x acceleromter connected
 need to have the pwm connecto the the gpio as described in code
 '''
 
-
 import time
 import board
 import busio
@@ -65,7 +64,7 @@ def main(argv):
     global data
 
     parser = argparse.ArgumentParser(description='acquire accel data to csv file')
-    parser.add_argument('output_dir', type=str,
+    parser.add_argument('--output-dir', type=str, required=True,
                         help='The dir to output the accel data to')
 
     args = parser.parse_args()
