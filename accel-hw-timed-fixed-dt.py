@@ -64,10 +64,14 @@ def main(argv):
     global data
 
     parser = argparse.ArgumentParser(description='acquire accel data to csv file')
-    parser.add_argument('--output-dir', type=str, required=True,
-                        help='The dir to output the accel data to')
+    parser.add_argument('--output_dir', type=str, required=True,
+                        help='The folder to output the accel data to')
+    parser.add_argument('--number_of_files', type=str, required=True,
+                        help='The number of data files to collect, sample rate and record length settings found in code')                        
 
     args = parser.parse_args()
+
+    files_max = int(args.number_of_files)
 
     #create a folder if it doesn't exist
     #if the folder exists error out
@@ -76,7 +80,7 @@ def main(argv):
 
     number_of_files = 0
 
-    while number_of_files != 300:   
+    while number_of_files != files_max:   
         p.start(50)
         #wait for data collection to finish
         done_collecting.wait()
